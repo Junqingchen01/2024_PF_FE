@@ -1,22 +1,22 @@
 <template>
-    <nav>
-        <v-toolbar class="custom-toolbar" v-if="islogin">
-            <v-toolbar-title>
-                <v-btn text to="/">Home</v-btn>
-                <v-btn text to="/reserva">Reserva</v-btn>
-                <v-btn text to="/horarios">Horarios</v-btn>
-                <v-btn text to="/dashboard" v-if="isAdmin">Dashboard</v-btn>
-            </v-toolbar-title>
-            <v-spacer>
-            </v-spacer>
-                <v-btn text to="/orders">Orders</v-btn>
-                
-                <v-btn icon>
-                    <v-icon>mdi-account</v-icon>
-                </v-btn>
-                
-        </v-toolbar>
-    </nav>
+      <nav v-if="isLogin">
+          <v-toolbar class="custom-toolbar" v-if="islogin">
+              <v-toolbar-title>
+                  <v-btn text to="/">Home</v-btn>
+                  <v-btn text to="/reserva">Reserva</v-btn>
+                  <v-btn text to="/horarios">Horarios</v-btn>
+                  <v-btn text to="/dashboard" v-if="isAdmin">Dashboard</v-btn>
+              </v-toolbar-title>
+              <v-spacer>
+              </v-spacer>
+                  <v-btn text to="/orders">Orders</v-btn>
+                  
+                  <v-btn icon text to="/perfil">
+                      <v-icon>mdi-account</v-icon>
+                  </v-btn>
+                  
+          </v-toolbar>
+      </nav>
 </template>
 
 <script>
@@ -27,15 +27,19 @@ export default {
     return {
       islogin: true,
       isAdmin: true,
-      mdiAccount: mdiAccount
+      mdiAccount: mdiAccount,
+      isLogin: false,
     }
-  }
+  },
+  created() {
+    this.isLogin = localStorage.getItem('isLogin') === 'true';
+  },
 };
 </script>
 
 <style>
 .custom-toolbar {
-    background-color: #EAD196 !important;
+    background-color: #E6BA50!important;
 }
 
 .custom-toolbar .v-btn {
