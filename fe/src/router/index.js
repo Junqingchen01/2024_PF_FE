@@ -1,7 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Login from '../views/user/Login.vue'
-import perfil from '../views/user/Perfil.vue'
+import Perfil from '../views/user/Perfil.vue'
+import Horarios from '../views/Horarios.vue'
+import Reserva from '../views/Reserva.vue'
+import Dashboard from '../views/Dashboard.vue'
+import Orders from '../views/Orders.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,7 +26,7 @@ const router = createRouter({
     {
       path: '/reserva',
       name: 'reserva',
-      component: () => import('../views/Reserva.vue'),
+      component: Reserva,
       beforeEnter: (to, from, next) => {
         const isAuthenticated = localStorage.getItem('isLogin'); 
         if (isAuthenticated) {
@@ -35,17 +39,17 @@ const router = createRouter({
     {
       path: '/horarios',
       name: 'horarios',
-      component: () => import('../views/Horarios.vue'),
+      component: Horarios,
     },
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('../views/Dashboard.vue'),
+      component: Dashboard,
     },
     {
       path: '/orders',
       name: 'orders',
-      component: () => import('../views/Orders.vue'),
+      component: Orders,
     },
     {
       path: '/login',
@@ -55,7 +59,7 @@ const router = createRouter({
     {
       path: '/perfil',
       name: 'perfil',
-      component: perfil
+      component: Perfil
     },
 
     
