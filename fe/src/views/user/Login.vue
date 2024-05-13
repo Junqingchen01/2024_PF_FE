@@ -15,7 +15,7 @@
             <v-col cols="3">    
                     <div class="login ">
                         <h1>Login</h1>
-                        <form @submit.prevent="login">
+                        <form @submit.prevent="handleLogin">
                         <label for="username">Username:</label>
                         <input type="text" id="username" v-model="username" required>
                         <label for="password">Password:</label>
@@ -34,7 +34,8 @@
   import chefImage from '@/assets/img/CHEFS.jpg';
   import escolaImage from '@/assets/img/ESCOLA.jpg';
   import premioImage from '@/assets/img/PREMIO.jpg';
-
+  import { useUserStore } from '@/stores/user';
+  
   export default {
     data() {
       return {
@@ -46,7 +47,8 @@
         ],
         currentIndex: 0,
         username: '',
-        password: ''
+        password: '',
+        userStore: useUserStore(),
       };
     },
     computed: {
@@ -55,14 +57,47 @@
       },
     },
     methods: {
-      login() {
-        if (this.username === 'admin' && this.password === 'admin') {
-          localStorage.setItem('isLogin', true);
+      async handleLogin() {
+        console.log('Username:', this.username);
+        console.log('Password:', this.password);
+        const loginURL = 'http://localhost:8080/login';
+        try {
+          const response = await fetch(loginURL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              NameOrEmail: this.username,
+              Password: this.password,
+            }),
+          });
+          
+          if (!response.ok) {
+            throw new Error('HTTP error, status = ' + response.status);
+          }
+          
+          const data = await response.json();
+          sessionStorage.setItem('isLogin', true);
+          sessionStorage.setItem('userInfo', JSON.stringify(data));
+          sessionStorage.setItem('token', data.token);
+
+         const userType = data.user.UserType;
+          if (userType === 'admin') {
+            sessionStorage.setItem('isAdmin', true);
+          } else {
+            sessionStorage.setItem('isAdmin', false);
+          }
+
+          alert('Login successful');
           this.$router.push('/');
-        } else {
-          alert('Invalid credentials');
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred while logging in');
         }
       }
+
+
     },
     mounted() {
       setInterval(() => {
@@ -71,8 +106,9 @@
     },
   };
   </script>
+
   
-  <style scoped>
+<style scoped>
   .container {
     margin: 20px ; 
     margin-right: 100px;

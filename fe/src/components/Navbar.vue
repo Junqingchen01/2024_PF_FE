@@ -1,6 +1,6 @@
 <template>
       <nav v-if="isLogin">
-          <v-toolbar class="custom-toolbar" v-if="islogin">
+          <v-toolbar class="custom-toolbar">
               <v-toolbar-title>
                   <v-btn text to="/">Home</v-btn>
                   <v-btn text to="/reserva">Reserva</v-btn>
@@ -25,14 +25,15 @@ import { mdiAccount } from '@mdi/js';
 export default {
   data() {
     return {
-      islogin: true,
-      isAdmin: true,
+      isAdmin: false,
       mdiAccount: mdiAccount,
       isLogin: false,
+      userInfo: JSON.parse(sessionStorage.getItem('userInfo')),
     }
   },
   created() {
-    this.isLogin = localStorage.getItem('isLogin') === 'true';
+    this.isLogin = JSON.parse(sessionStorage.getItem('isLogin'));
+    this.isAdmin = JSON.parse(sessionStorage.getItem('isAdmin'));
   },
 };
 </script>

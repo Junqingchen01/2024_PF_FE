@@ -6,6 +6,8 @@ import Horarios from '../views/Horarios.vue'
 import Reserva from '../views/Reserva.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Orders from '../views/Orders.vue'
+import Order from '../components/order.vue'
+import Comentar from '../views/Comentar.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,7 +17,7 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
       beforeEnter: (to, from, next) => {
-        const isAuthenticated = localStorage.getItem('isLogin'); 
+        const isAuthenticated = sessionStorage.getItem('isLogin'); 
         if (isAuthenticated) {
           next();
         } else {
@@ -28,7 +30,7 @@ const router = createRouter({
       name: 'reserva',
       component: Reserva,
       beforeEnter: (to, from, next) => {
-        const isAuthenticated = localStorage.getItem('isLogin'); 
+        const isAuthenticated = sessionStorage.getItem('isLogin'); 
         if (isAuthenticated) {
           next();
         } else {
@@ -61,6 +63,16 @@ const router = createRouter({
       name: 'perfil',
       component: Perfil
     },
+    {
+      path: '/order/:id',
+      name: 'Order',
+      component: Order
+    },
+    {
+      path: '/comentar/:id',
+      name: 'comentar',
+      component: Comentar
+    }
 
     
   ]

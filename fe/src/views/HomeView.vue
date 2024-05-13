@@ -7,10 +7,10 @@
 <script>
 export default {
   mounted() {
-    const hasRefreshed = localStorage.getItem('hasRefreshed');
+    const hasRefreshed = sessionStorage.getItem('hasRefreshed');
     if (!hasRefreshed) {
       this.refreshPage();
-      localStorage.setItem('hasRefreshed', true);
+      sessionStorage.setItem('hasRefreshed', true);
     }
   },
   methods: {

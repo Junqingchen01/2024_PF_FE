@@ -1,0 +1,96 @@
+<template>
+  <v-row justify="center">
+  <v-col cols="6">
+    <v-card class="order-card">
+      <v-card-title class="text-center">
+        <div>{{ order.number_people }} Pessoas</div>
+        <div>{{ order.OrderDate }} - {{order.Horario}}</div>
+        <div>Status: {{ order.status }}</div>
+      </v-card-title>
+      <v-card-text>
+        <div v-for="(client, clientIndex) in order.clients" :key="clientIndex" class="client-section">
+          <h3>{{ client.name }}</h3>
+
+          <p v-if="client.indifferent" style="color: #7D0A0A;"> *Client {{ client.name }} esta indifferent em paratos*</p>
+          <ul>
+            <li v-for="(meal, mealIndex) in client.meals" :key="mealIndex" class="meal-item">
+              {{ meal.food.food_name }} ({{ meal.food.type }}) - {{ meal.observation || 'No observations' }}
+            </li>
+          </ul>
+        </div>
+        <div class="buttons">
+          <v-btn v-if="order.status === 'in_progress'"  @click="cancelOrder()" color="#7D0A0A">Cancelar</v-btn>
+          <v-btn @click="$router.push('/orders')" color="#7D0A0A">Back to Orders</v-btn>
+          <v-btn v-if="order.status === 'Done'" @click="Comentar(order.order_id)" color="#7D0A0A">Comentar</v-btn>
+        </div>
+
+      </v-card-text>
+    </v-card>
+  </v-col>
+</v-row>
+</template>
+
+<script>
+import { defineComponent } from 'vue';
+import { useOrderStore } from '../stores/order';
+
+export default defineComponent({
+  name: 'OrderDT',
+  data() {
+    return {
+      orderStore: useOrderStore(),
+      user: '',
+      order: ''
+    };
+  },
+  async created() {
+    try {
+      this.user = JSON.parse(sessionStorage.getItem('user'));
+      const orderId = this.$route.params.id; 
+      await this.orderStore.fetchOrder(orderId);
+      this.order = this.orderStore.getOrder;
+    } catch (error) {
+      console.error('Error fetching order:', error);
+    }
+    console.log('Order:', this.order);
+  },
+  methods: {
+    async cancelOrder() {
+      const res = prompt('Inserir "sim" para cancelar orden.');
+      if (res === null) return;
+      if (res.toLowerCase() === 'sim') {
+        await this.orderStore.cancelOrder(this.order.order_id);
+        this.$router.push('/orders');
+      }
+    },
+    Comentar(id){
+      this.$router.push({ name: 'comentar', params: { id } });
+    }
+  }
+});
+</script>
+
+
+<style scoped>
+.order-card {
+  background-color: white;
+  margin-top: 20px;
+  border: 2px solid #7D0A0A;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.client-section {
+  margin-bottom: 20px;
+}
+
+.meal-item {
+  list-style-type: none;
+  color: #7D0A0A;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+</style>

@@ -36,6 +36,8 @@
           :view-mode="type"
           :weekdays="weekday"
           :interval-minutes="120" 
+          @click:event="showEvent"
+
         ></v-calendar>
         </v-sheet>
       </v-col>
@@ -67,6 +69,7 @@ export default {
       start: adapter.startOfDay(adapter.startOfMonth(new Date())),
       end: adapter.endOfDay(adapter.endOfMonth(new Date())),
     })
+
   },
   methods: {
   getEvents({ start, end }) {
@@ -97,6 +100,23 @@ export default {
 
     this.events = events;
   },
+
+  showEvent({ nativeEvent, event }) {
+  const open = () => {
+    this.selectedEvent = event;
+    this.selectedElement = nativeEvent.target;
+    this.selectedOpen = true;
+  };
+
+  if (this.selectedOpen && this.selectedEvent === event) {
+    this.selectedOpen = false;
+  } else {
+    open();
+  }
+
+  nativeEvent.stopPropagation();
+}
+
 },
 
 
