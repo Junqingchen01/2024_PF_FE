@@ -4,6 +4,7 @@ export const useMenuStore = defineStore('menu', {
     state: () => ({
         menus: [],
         menu: [],
+        menubyid: [],
         menuItems: [], 
 
         prepratos: [],
@@ -17,6 +18,7 @@ export const useMenuStore = defineStore('menu', {
         getPrePratos: (state) => state.prepratos,
         getPratoPrincipal: (state) => state.pratoprincipal,
         getSobremesas: (state) => state.sobremesas,
+        getMenuById: (state) => state.menubyid,
     },
     actions: {
         async fetchMenus() {
@@ -90,6 +92,51 @@ export const useMenuStore = defineStore('menu', {
                 return false;
             }
         },
+
+        async afterOrder(formattedOrder,type_day, menu_type) {
+            try {
+                const token = sessionStorage.getItem('token');
+                const res = await fetch(`http://localhost:8080/menu/${type_day}/${menu_type}/updateMenuItemAfterOrder`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(formattedOrder),
+                });
+                if (res.status === 200) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error updating menu:', error);
+                return false;
+            }
+        },
+
+        async fetchMenuById(id) {
+            try {
+                const token = sessionStorage.getItem('token');
+                const res = await fetch(`http://localhost:8080/menu/menuid/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                if (res.status === 200) {
+                    const data = await res.json();
+                    this.menubyid = data.data;
+                    sessionStorage.setItem('thisMenu', JSON.stringify(this.menubyid));
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error getting menu:', error);
+                return false;
+            }
+        }
         
     },
 });

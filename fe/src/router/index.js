@@ -5,9 +5,10 @@ import Perfil from '../views/user/Perfil.vue'
 import Horarios from '../views/Horarios.vue'
 import Reserva from '../views/Reserva.vue'
 import Dashboard from '../views/Dashboard.vue'
-import Orders from '../views/Orders.vue'
 import Order from '../components/order.vue'
+import menuDetail from '../components/menuDetail.vue'
 import Comentar from '../views/Comentar.vue'
+import EditarPerfil from '@/views/EditarPerfil.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -49,11 +50,6 @@ const router = createRouter({
       component: Dashboard,
     },
     {
-      path: '/orders',
-      name: 'orders',
-      component: Orders,
-    },
-    {
       path: '/login',
       name: 'login',
       component: Login
@@ -72,7 +68,19 @@ const router = createRouter({
       path: '/comentar/:id',
       name: 'comentar',
       component: Comentar
+    },
+    {
+      path: '/menuDetail/:id',
+      name: 'menuDetail',
+      component: menuDetail
+    },
+    {
+      path: '/editarPerfil/:field',
+      name: 'editarPerfil',
+      component: EditarPerfil
     }
+    
+
 
     
   ]

@@ -17,13 +17,16 @@
               {{ meal.food.food_name }} ({{ meal.food.type }}) - {{ meal.observation || 'No observations' }}
             </li>
           </ul>
+
         </div>
         <div class="buttons">
-          <v-btn v-if="order.status === 'in_progress'"  @click="cancelOrder()" color="#7D0A0A">Cancelar</v-btn>
+          <v-btn v-if="order.status === 'done' " @click="cancelOrder()" color="#7D0A0A">Cancelar</v-btn>
           <v-btn @click="$router.push('/orders')" color="#7D0A0A">Back to Orders</v-btn>
-          <v-btn v-if="order.status === 'Done'" @click="Comentar(order.order_id)" color="#7D0A0A">Comentar</v-btn>
+          <v-btn v-if="order.avaliar === 'true'" @click="Comentar(order.order_id)" color="#7D0A0A">Comentar</v-btn>
         </div>
-
+        <div v-if="order.avaliar === 'false'" style="display: flex ;justify-content: center; margin-top: 10px;">
+            Admin ainda não permite fazer avaliação.
+        </div>
       </v-card-text>
     </v-card>
   </v-col>

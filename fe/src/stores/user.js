@@ -1,9 +1,7 @@
 // store/user.js
 
 import { defineStore } from 'pinia';
-import * as api from '../api/api.js';
 
-const API_URL = 'http://localhost:8080';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -41,5 +39,29 @@ export const useUserStore = defineStore('user', {
         return false;
       }
     },
+
+    async editarPerfil(editedData) {
+      try {
+          const token = sessionStorage.getItem('token');
+          const res = await fetch(`http://localhost:8080/user/updateuser`, {
+              method: 'PUT',
+              headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify(editedData),
+          });
+          if (res.status === 200) {
+              alert('Perfil editado com sucesso');
+              return true;
+          } else {
+              return false;
+          }
+      } catch (error) {
+          console.error('Error updating profile:', error);
+          return false;
+      }
+  }
+  
   },
 });

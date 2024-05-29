@@ -6,8 +6,8 @@
         <br>
         <v-btn @click="switchContent('comidas')" class="tab-btn" :class="{ active: activeTab === 'comidas' }">Comidas</v-btn>
         <br>
-        <v-btn @click="switchContent('horarios')" class="tab-btn" :class="{ active: activeTab === 'horarios' }">Horarios</v-btn>
-        <br>
+        <!-- <v-btn @click="switchContent('horarios')" class="tab-btn" :class="{ active: activeTab === 'horarios' }">Horarios</v-btn> -->
+        <!-- <br> -->
         <v-btn @click="switchContent('comentarios')" class="tab-btn" :class="{ active: activeTab === 'comentarios' }">Comentarios</v-btn>
         <br>
 
@@ -16,7 +16,7 @@
       <v-col cols="9">
         <v-row justify="center">
           <v-col v-if="activeTab === 'menus'" v-for="(menu, index) in menus" :key="index" cols="4">
-            <v-card class="menu-card">
+            <v-card class="menu-card" @click="goToMenuDetail(menu.menu_id)">
               <v-card-title class="menu-card-title">
                 <div>
                   <v-card-title v-if="menu.weekday.type_day === 'monday'" > Segunda-feira </v-card-title>
@@ -32,11 +32,14 @@
                 <br>
                 <p>Comidas:</p>
                 <ul class="menu-item-list">
-                  <li v-for="(menuItem, itemIndex) in menu.menuItems" :key="itemIndex" class="menu-item">
-                    {{ menuItem.food.type }}
-                    <br>
-                    {{ menuItem.food.food_name }} (Quantidade: {{ menuItem.quantity }})
-                  </li>
+                  <template v-for="(foodType, typeIndex) in ['pre prato', 'prato principal', 'sobremesa']">
+                    <template v-if="typeIndex === 0 || foodType !== ['pre prato', 'prato principal', 'sobremesa'][typeIndex - 1]">
+                      <h3>{{ foodType }}</h3>
+                    </template>
+                    <li v-for="(menuItem, itemIndex) in menu.menuItems.filter(item => item.food.type === foodType)" :key="itemIndex">
+                      <span>{{ menuItem.food.food_name }} (Quantidade: {{ menuItem.quantity }})</span>
+                    </li>
+                  </template>
                 </ul>
               </v-card-text>
             </v-card>
@@ -51,7 +54,7 @@
           </v-col>
           <!-- HORARIOS -->
           <v-col v-if="activeTab === 'horarios'">
-
+            
           </v-col>
         </v-row>
       </v-col>
@@ -87,6 +90,10 @@ export default {
   methods: {
     switchContent(tab) {
       this.activeTab = tab;
+    },
+
+    goToMenuDetail(id) {
+      this.$router.push({ name: 'menuDetail', params: { id } });
     },
   },
 };

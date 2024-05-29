@@ -85,5 +85,28 @@ export const useOrderStore = defineStore('order', {
       }
     },
     
+    async criarOrder(orderData) {
+      try {
+        const token = sessionStorage.getItem('token');
+        const res = await fetch(`http://localhost:8080/order/create`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(orderData),
+        });
+    
+        if (res.status === 200) {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        console.error('Error creating order:', error);
+        return false;
+      }
+    }
+    
   },
 });

@@ -89,7 +89,6 @@
             sessionStorage.setItem('isAdmin', false);
           }
 
-          alert('Login successful');
           this.$router.push('/');
         } catch (error) {
           console.error('Error:', error);
