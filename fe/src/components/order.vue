@@ -2,6 +2,8 @@
   <v-row justify="center">
   <v-col cols="6">
     <v-card class="order-card">
+      <!-- volta a pagina aterior-->
+      <v-btn @click="$router.go(-1)" color="#7D0A0A">Volta</v-btn>
       <v-card-title class="text-center">
         <div>{{ order.number_people }} Pessoas</div>
         <div>{{ order.OrderDate }} - {{order.Horario}}</div>
@@ -21,10 +23,10 @@
         </div>
         <div class="buttons">
           <v-btn v-if="order.status === 'done' " @click="cancelOrder()" color="#7D0A0A">Cancelar</v-btn>
-          <v-btn @click="$router.push('/orders')" color="#7D0A0A">Back to Orders</v-btn>
-          <v-btn v-if="order.avaliar === 'true'" @click="Comentar(order.order_id)" color="#7D0A0A">Comentar</v-btn>
+          <v-btn v-if="order.avaliar === 'true' " @click="Comentar(order.order_id)" color="#7D0A0A">Avaliar</v-btn>
+          <v-btn v-if="isAdmin" @click="ativar()" color="red">Ativar avaliação</v-btn>
         </div>
-        <div v-if="order.avaliar === 'false'" style="display: flex ;justify-content: center; margin-top: 10px;">
+        <div v-if="order.avaliar !== 'true'" style="display: flex ;justify-content: center; margin-top: 10px;">
             Admin ainda não permite fazer avaliação.
         </div>
       </v-card-text>
@@ -43,7 +45,8 @@ export default defineComponent({
     return {
       orderStore: useOrderStore(),
       user: '',
-      order: ''
+      order: '',
+      isAdmin: sessionStorage.getItem('isAdmin') === 'true',
     };
   },
   async created() {
@@ -52,6 +55,7 @@ export default defineComponent({
       const orderId = this.$route.params.id; 
       await this.orderStore.fetchOrder(orderId);
       this.order = this.orderStore.getOrder;
+
     } catch (error) {
       console.error('Error fetching order:', error);
     }
@@ -68,6 +72,10 @@ export default defineComponent({
     },
     Comentar(id){
       this.$router.push({ name: 'comentar', params: { id } });
+    },
+    async ativar(){
+      await this.orderStore.AtivarAvaliacao(this.order.order_id);
+      alert('Avaliacao ativada com sucesso !');
     }
   }
 });

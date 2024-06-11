@@ -46,9 +46,15 @@
               <v-col v-for="(menu, index) in menu" :key="index">
                 <label>Lugar disponível: {{ menu.maximum_capacity }}</label>
                 <br>
-                <label v-if="menu.isfixo === 'true'">Neste menu não permite escolher</label>
-                <br>
+                <label v-if="menu.menu_type === 'Almoço'"> 
+                  Tempo: {{ menu.lunch_start_time }} - {{ menu.lunch_end_time }}
+                </label>
+
+                <label v-if="menu.menu_type === 'Jantar'"> 
+                  Tempo: {{ menu.dinner_start_time }} - {{ menu.dinner_end_time }}
+                </label>
               </v-col>
+
             </v-row>
             <hr>
             <br>
@@ -234,6 +240,20 @@ export default {
       }
     },
     submit() {
+      const now = new Date();
+      const [hours, minutes] = this.selectedTime === 'Almoço' 
+        ? this.menuStore.getMenu[0].lunch_start_time.split(':').map(Number)
+        : this.menuStore.getMenu[0].dinner_start_time.split(':').map(Number);
+        
+      const menuStartTime = new Date();
+      menuStartTime.setHours(hours, minutes, 0, 0);
+      const oneHourBefore = new Date(menuStartTime.getTime() - 60 * 60 * 1000);
+
+      if (now > oneHourBefore) {
+        alert(`Não é possível reservar menos de uma hora antes do início do ${this.selectedTime === 'Almoço' ? 'almoço' : 'jantar'}.`);
+        return;
+      }
+
       const orderData = {
         number_people: this.numPeople,
         OrderDate: this.selectedDate,
@@ -284,7 +304,7 @@ export default {
 
       this.menuStore.afterOrder(formattedOrder, newDate, this.selectedTime);
       this.orderStore.criarOrder(orderData);
-      this.$router.push('/orders');
+      this.$router.push('/perfil');
     }
   },
   computed: {

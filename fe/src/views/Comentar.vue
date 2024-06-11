@@ -119,13 +119,10 @@ export default {
           body: JSON.stringify(comentario)
         });
         if (res.status === 201) {
-          const comentarioResponse = await res.json();
-          alert('Comment sent successfully !');
-          console.log('Comentario:', comentarioResponse);
-          this.$router.push('/orders');
+          alert('avaliação entrega com sucesso !');
+          this.$router.push('/perfil');
         } else {
-          alert('Error sending comment !');
-          console.error('Error sending comment:', comentarioResponse);
+          alert('Erro ! ja fizest avaliação sobre neste order !');
           return false;
         }
       } catch (error) {
@@ -134,7 +131,7 @@ export default {
       } 
     },
     cancelComment() {
-      this.$router.push('/orders'); 
+      this.$router.push('/perfil'); 
     }
   }
 };

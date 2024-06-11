@@ -6,6 +6,7 @@ export const useMenuStore = defineStore('menu', {
         menu: [],
         menubyid: [],
         menuItems: [], 
+        todaymenu: [],
 
         prepratos: [],
         pratoprincipal: [],
@@ -15,6 +16,8 @@ export const useMenuStore = defineStore('menu', {
         getMenus: (state) => state.menus,
         getMenu: (state) => state.menu,
         getMenuItems: (state) => state.menuItems, 
+        getTodayMenu: (state) => state.todaymenu,
+
         getPrePratos: (state) => state.prepratos,
         getPratoPrincipal: (state) => state.pratoprincipal,
         getSobremesas: (state) => state.sobremesas,
@@ -136,7 +139,53 @@ export const useMenuStore = defineStore('menu', {
                 console.error('Error getting menu:', error);
                 return false;
             }
+        },
+
+
+        async updateMenuTime(id, NewTime) {
+            try {
+                const token = sessionStorage.getItem('token');
+                const res = await fetch(`http://localhost:8080/menu/menuid/${id}/updateMenuTime`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(NewTime),
+                });
+                if (res.status === 200) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error updating menu:', error);
+                return false;
+            }
+        },
+
+        async fetchTodayMenu() {
+            try {
+                const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+                console.log(today);
+                const res = await fetch(`http://localhost:8080/menu/${today}`, {
+                    method: 'GET',
+                    headers: {
+                    },
+                });
+                if (res.status === 200) {
+                    const data = await res.json();
+                    this.todaymenu = data.data;
+                    console.log(this.todaymenu);
+                    sessionStorage.setItem('todaymenu', JSON.stringify(data.data));
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error getting menus:', error);
+                return false;
+            }
         }
-        
     },
 });

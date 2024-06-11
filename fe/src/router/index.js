@@ -9,6 +9,9 @@ import Order from '../components/order.vue'
 import menuDetail from '../components/menuDetail.vue'
 import Comentar from '../views/Comentar.vue'
 import EditarPerfil from '@/views/EditarPerfil.vue'
+import foodDetail from '@/components/foodDetail.vue'
+import avaliacaoDetail from '@/components/avaliacaoDetail.vue'
+import Registar from '../views/user/Registar.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,6 +51,14 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: Dashboard,
+      beforeEnter: (to, from, next) => {
+        const isAuthenticated = sessionStorage.getItem('isLogin'); 
+        if (isAuthenticated) {
+          next();
+        } else {
+          next('/login');
+        }
+      }
     },
     {
       path: '/login',
@@ -57,7 +68,15 @@ const router = createRouter({
     {
       path: '/perfil',
       name: 'perfil',
-      component: Perfil
+      component: Perfil,
+      beforeEnter: (to, from, next) => {
+        const isAuthenticated = sessionStorage.getItem('isLogin'); 
+        if (isAuthenticated) {
+          next();
+        } else {
+          next('/login');
+        }
+      }
     },
     {
       path: '/order/:id',
@@ -78,6 +97,21 @@ const router = createRouter({
       path: '/editarPerfil/:field',
       name: 'editarPerfil',
       component: EditarPerfil
+    },
+    {
+      path: '/foodDetail/:id',
+      name: 'foodDetail',
+      component: foodDetail
+    },
+    {
+      path: '/avaliacaoDetail/:id',
+      name: 'avaliacaoDetail',
+      component: avaliacaoDetail
+    },
+    {
+      path: '/registar',
+      name: 'registar',
+      component: Registar
     }
     
 

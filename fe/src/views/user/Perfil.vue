@@ -9,7 +9,7 @@
             <v-container>
               <v-row justify="center">
                 <v-col cols="12">
-                  <v-avatar size="300">
+                    <v-avatar size="300">
                     <img :src="userinfo.user.Avatar" alt="Avatar">
                   </v-avatar>
                 </v-col>
@@ -18,7 +18,7 @@
               <v-row>
                 <v-col cols="12">
                   <p>
-                    <strong>Name:</strong> 
+                    <strong style="color: #7D0A0A;">Name:</strong> 
                     <span @mouseover="showEditarName = true" @mouseleave="showEditarName = false">
                       {{ userinfo.user.Name }}
                       <v-btn v-if="showEditarName" @click="editarPerfil('Name')" text>
@@ -29,7 +29,7 @@
                 </v-col>
                 <v-col cols="12">
                   <p>
-                    <strong>Email:</strong> 
+                    <strong style="color: #7D0A0A;">Email:</strong> 
                     <span @mouseover="showEditarEmail = true" @mouseleave="showEditarEmail = false">
                       {{ userinfo.user.Email }}
                       <v-btn v-if="showEditarEmail" @click="editarPerfil('Email')" text>
@@ -40,7 +40,7 @@
                 </v-col>
                 <v-col cols="12">
                   <p>
-                    <strong>Tel:</strong> 
+                    <strong style="color: #7D0A0A;">Tel:</strong> 
                     <span @mouseover="showEditarTel = true" @mouseleave="showEditarTel = false">
                       {{ userinfo.user.Tel }}
                       <v-btn v-if="showEditarTel" @click="editarPerfil('Tel')" text>
@@ -50,53 +50,116 @@
                   </p>
                 </v-col>
                 <v-col cols="12">
-                  <p><strong>UserType:</strong> {{ userinfo.user.UserType }}</p>
+                  <p><strong style="color: #7D0A0A;">UserType:</strong> {{ userinfo.user.UserType }}</p>
                 </v-col>
               </v-row>
 
             </v-container>
-            <div class="buttons">
-              <v-btn @click="editarPassword" color="#7D0A0A">Editar Senha</v-btn>
-              <v-btn @click="logout" color="#7D0A0A">Terminar sessão</v-btn>
+            <br>
+            <div class="button">
+              <v-row>
+                <v-btn @click="editarPassword" color="#7D0A0A" class="text-center">Editar Senha</v-btn>
+              </v-row>
+              <v-row>
+                <v-btn @click="openDialog" color="#7D0A0A" class="text-center">Editar Avatar</v-btn>
+              </v-row>
+              <v-row>
+                <v-btn @click="logout" color="#7D0A0A" class="text-center" >Terminar sessão</v-btn>
+              </v-row>
             </div>
-
+            <br>
           </v-card-text>
           <v-card-text v-else>
             loading...
           </v-card-text>
         </v-card>
       </v-col>
-      <!-- orders card-->
-      <v-col cols="8">
-        <v-card class="mt-5">
-          <v-card-title class="text-center">Orders</v-card-title>
-          <v-card-text>
-            <v-row class="justify-center">
-              <v-col cols="10" class="mt-4">
-                <v-card v-for="(order, index) in sortedOrders" 
-                :key="index" class="order-card"
-                 @click="goToOrderDetail(order.order_id)" 
-                 >
-                  <div class="orden-content order-content">
-                    <div class="order-info">
-                      <p><strong>Order Date:</strong> {{ order.OrderDate }}</p>
-                      <p><strong>Time:</strong> {{ order.Horario }}</p>
-                      <p><strong>Number of People:</strong> {{ order.number_people }}</p>
-                    </div>
-                    <p class="order-status" :class="{ 'Done': order.Status === 'done' }">{{ order.Status === 'in_progress' ? 'Em progresso' : order.Status }}</p>
+        <!-- orders card-->
+        <v-col cols="8">
+          <v-card class="mt-5" style="height: 300px;">
+            <v-card-title class="text-center">Orders</v-card-title>
+            <v-card-text style="height: calc(100% - 56px); overflow-y: auto;">
+              <v-row class="justify-center">
+                <v-col cols="10" class="mt-4">
+                  <div v-if="sortedOrders.length === 0">
+                    <p>Não há ordens ainda.</p>
                   </div>
-                </v-card>
-              </v-col>
-            </v-row>
+                  <v-card v-for="(order, index) in sortedOrders" :key="index" class="order-card" @click="goToOrderDetail(order.order_id)">
+                    <div class="orden-content order-content">
+                      <div class="order-info">
+                        <p><strong style="color: #7D0A0A;">Order ID:</strong> {{ order.order_id }}</p>
+                        <p><strong style="color: #7D0A0A;">Order Date:</strong> {{ order.OrderDate }}</p>
+                        <p><strong style="color: #7D0A0A;">Horario:</strong> {{ order.Horario }}</p>
+                      </div>
+                      <p class="order-status" :class="{ 'Done': order.Status === 'done' }">{{ order.Status === 'in_progress' ? 'Em progresso' : order.Status }}</p>
+                    </div>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        <!-- Avaliação card -->
+        <v-card class="mt-5" style="height: 395px;">
+          <v-card-title class="text-center title">Minha Avaliação</v-card-title>
+          <v-divider></v-divider>
+          <v-card-text style="height: calc(100% - 56px); overflow-y: auto; display: flex; justify-content: center; align-items: center;">
+            <v-list v-if="avaliacoes.length === 0">
+              <div>Ainda não fizeste nenhuma avaliação.</div>
+            </v-list>
+            <v-list v-else>
+              <v-list-item v-for="(avaliacao, index) in avaliacoes" :key="index">
+                <v-divider v-if="index !== 0"></v-divider>
+                <v-list-item-content class="text-center">
+                  <v-list-item-title>
+                    <strong style="color: #7D0A0A;">Serviço:</strong>
+                    <v-rating v-model="avaliacao.servicerating" color="#FFD700" background-color="#E0E0E0" readonly></v-rating> <!-- 设置为只读，不能被点击 -->
+                  </v-list-item-title>
+                  <v-list-item-title>
+                    <strong style="color: #7D0A0A;">Temperatura:</strong>
+                    <v-rating v-model="avaliacao.temperatureRating" color="#FFD700" background-color="#E0E0E0" readonly></v-rating> <!-- 设置为只读，不能被点击 -->
+                  </v-list-item-title>
+                  <v-list-item-title>
+                    <strong style="color: #7D0A0A;">Luz:</strong>
+                    <v-rating v-model="avaliacao.lightRating" color="#FFD700" background-color="#E0E0E0" readonly></v-rating> <!-- 设置为只读，不能被点击 -->
+                  </v-list-item-title>
+
+                  <v-list-item-title><strong style="color: #7D0A0A;">Observação:</strong> {{ avaliacao.Observation }}</v-list-item-title>
+                </v-list-item-content>
+                <v-list-item-action style="display: flex; justify-content: space-between;">
+                  <v-btn color="#7D0A0A">Mais</v-btn>
+                  <v-btn color="#7D0A0A">Delect</v-btn>
+                </v-list-item-action>
+              </v-list-item>
+            </v-list>
           </v-card-text>
         </v-card>
       </v-col>
     </v-row>
   </v-container>
+
+  <v-dialog v-model="showAvatarDialog" max-width="500px">
+    <v-card>
+      <v-card-title class="text-center">Change Avatar</v-card-title>
+      <v-card-text>
+        <v-form @submit.prevent="uploadAvatar">
+          <v-file-input
+            v-model="avatarFile"
+            accept="image/*"
+            label="Select Avatar"
+            outlined
+            dense
+          ></v-file-input>
+          <v-btn type="submit" color=" #7D0A0A">Upload</v-btn>
+        </v-form>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
+
 </template>
 
 <script>
 import { useOrderStore } from '@/stores/order';
+import { useAvaliarStore } from '@/stores/avaliar';
 
 export default {
   data() {
@@ -105,7 +168,13 @@ export default {
       showEditarName: false,
       showEditarEmail: false,
       showEditarTel: false,
+      showAvatarDialog: false,
+      avatarFile: null,
       orderStore: useOrderStore(),
+      avaliarStore: useAvaliarStore(),
+      avaliacoes: [], 
+
+      
     };
   },
   methods: {
@@ -122,35 +191,59 @@ export default {
     goToOrderDetail(id) {
       this.$router.push({ name: 'Order', params: { id } });
     },
+    openDialog(){
+      this.showAvatarDialog = true
+    },
+    // async uploadAvatar() {
+    //   try {
+    //     const formData = new FormData();
+    //     formData.append('avatar', this.avatarFile);
+    //     await axios.post('http://localhost:8080/user/updateuser', formData, {
+    //       headers: {
+    //         'Content-Type': 'multipart/form-data'
+    //       }
+    //     });
+
+    //     this.showAvatarDialog = false;
+    //   } catch (error) {
+    //     alert('An error occurred while uploading the avatar.');
+    //     console.error(error);
+    //   }
+    // },
+ 
   },
   created() {
     try {
+      const storedAvaliacoes = sessionStorage.getItem('Myavaliacoes');
+      if (storedAvaliacoes) {
+        this.avaliacoes = JSON.parse(storedAvaliacoes);
+      }
       this.orderStore.fetchOrders();
+      this.avaliarStore.fetchMyAvaliacoes();
     } catch (error) {
       alert(error.message);
     }
   },
-
   computed: {
     sortedOrders() {
       return this.orderStore.getOrders.slice().sort((a, b) => {
-        if (a.Status === 'in_progress' && b.Status !== 'in_progress') {
-          return -1;
-        } else if (a.Status !== 'in_progress' && b.Status === 'in_progress') {
-          return 1;
-        } else {
-          // Keep the original order if both are in_progress or neither is
-          return 0;
-        }
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      const today = new Date();
+      const diffA = Math.abs(today - dateA);
+      const diffB = Math.abs(today - dateB);
+      return diffA - diffB;
       });
     }
   }
 };
 </script>
 
+
 <style scoped>
 .mt-5 {
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 .order-card {
   margin-bottom: 20px;
@@ -187,7 +280,12 @@ export default {
   margin: auto 0;
 }
 
-/* Style for in-progress status */
+.button{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; 
+}
 .Done {
   color: green;
 }

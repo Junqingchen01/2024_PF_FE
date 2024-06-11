@@ -4,13 +4,11 @@
               <v-toolbar-title>
                   <v-btn text to="/">Home</v-btn>
                   <v-btn text to="/reserva">Reserva</v-btn>
-                  <v-btn text to="/horarios">Horarios</v-btn>
+                  <!-- <v-btn text to="/horarios">Horarios</v-btn> -->
                   <v-btn text to="/dashboard" v-if="isAdmin">Dashboard</v-btn>
               </v-toolbar-title>
               <v-spacer>
-              </v-spacer>
-                  <v-btn text to="/orders">Orders</v-btn>
-                  
+              </v-spacer>                  
                   <v-btn icon text to="/perfil">
                       <v-icon>mdi-account</v-icon>
                   </v-btn>
