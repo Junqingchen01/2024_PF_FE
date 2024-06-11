@@ -32,6 +32,7 @@ export default {
   created() {
     this.isLogin = JSON.parse(sessionStorage.getItem('isLogin'));
     this.isAdmin = JSON.parse(sessionStorage.getItem('isAdmin'));
+    
   },
 };
 </script>

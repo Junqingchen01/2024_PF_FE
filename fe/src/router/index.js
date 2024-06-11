@@ -52,7 +52,7 @@ const router = createRouter({
       name: 'dashboard',
       component: Dashboard,
       beforeEnter: (to, from, next) => {
-        const isAuthenticated = sessionStorage.getItem('isLogin'); 
+        const isAuthenticated = sessionStorage.getItem('isAdmin'); 
         if (isAuthenticated) {
           next();
         } else {

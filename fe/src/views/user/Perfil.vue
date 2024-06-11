@@ -112,22 +112,23 @@
                 <v-list-item-content class="text-center">
                   <v-list-item-title>
                     <strong style="color: #7D0A0A;">Serviço:</strong>
-                    <v-rating v-model="avaliacao.servicerating" color="#FFD700" background-color="#E0E0E0" readonly></v-rating> <!-- 设置为只读，不能被点击 -->
+                    <v-rating v-model="avaliacao.servicerating" color="#FFD700" background-color="#E0E0E0" readonly></v-rating> 
                   </v-list-item-title>
                   <v-list-item-title>
                     <strong style="color: #7D0A0A;">Temperatura:</strong>
-                    <v-rating v-model="avaliacao.temperatureRating" color="#FFD700" background-color="#E0E0E0" readonly></v-rating> <!-- 设置为只读，不能被点击 -->
+                    <v-rating v-model="avaliacao.temperatureRating" color="#FFD700" background-color="#E0E0E0" readonly></v-rating> 
                   </v-list-item-title>
                   <v-list-item-title>
                     <strong style="color: #7D0A0A;">Luz:</strong>
-                    <v-rating v-model="avaliacao.lightRating" color="#FFD700" background-color="#E0E0E0" readonly></v-rating> <!-- 设置为只读，不能被点击 -->
+                    <v-rating v-model="avaliacao.lightRating" color="#FFD700" background-color="#E0E0E0" readonly></v-rating> 
                   </v-list-item-title>
 
                   <v-list-item-title><strong style="color: #7D0A0A;">Observação:</strong> {{ avaliacao.Observation }}</v-list-item-title>
                 </v-list-item-content>
                 <v-list-item-action style="display: flex; justify-content: space-between;">
-                  <v-btn color="#7D0A0A">Mais</v-btn>
-                  <v-btn color="#7D0A0A">Delect</v-btn>
+                  <div class="text-center">
+                    <v-btn color="#7D0A0A" @click="goToAvaliacaoDetail(index)" >Mais</v-btn>
+                  </div>
                 </v-list-item-action>
               </v-list-item>
             </v-list>
@@ -141,7 +142,7 @@
     <v-card>
       <v-card-title class="text-center">Change Avatar</v-card-title>
       <v-card-text>
-        <v-form @submit.prevent="uploadAvatar">
+        <v-form>
           <v-file-input
             v-model="avatarFile"
             accept="image/*"
@@ -149,7 +150,7 @@
             outlined
             dense
           ></v-file-input>
-          <v-btn type="submit" color=" #7D0A0A">Upload</v-btn>
+          <v-btn @click="uploadAvatar()" color=" #7D0A0A">Upload</v-btn>
         </v-form>
       </v-card-text>
     </v-card>
@@ -194,22 +195,33 @@ export default {
     openDialog(){
       this.showAvatarDialog = true
     },
-    // async uploadAvatar() {
-    //   try {
-    //     const formData = new FormData();
-    //     formData.append('avatar', this.avatarFile);
-    //     await axios.post('http://localhost:8080/user/updateuser', formData, {
-    //       headers: {
-    //         'Content-Type': 'multipart/form-data'
-    //       }
-    //     });
+    goToAvaliacaoDetail(index) {
+      this.$router.push({ name: 'avaliacaoDetail', params: { id: this.avaliacoes[index].avaliacao_id }});
+    },
+    async uploadAvatar() {
+      try {
+        const token = sessionStorage.getItem('token');
+        const formData = new FormData();
+        formData.append('newAvatar', this.avatarFile);
 
-    //     this.showAvatarDialog = false;
-    //   } catch (error) {
-    //     alert('An error occurred while uploading the avatar.');
-    //     console.error(error);
-    //   }
-    // },
+       const response = await fetch('http://localhost:8080/user/updateuser', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+         body: formData,
+        });
+        if (!response.ok) {
+          throw new Error('HTTP error, status = ' + response.status);
+        }
+
+
+      } catch (error) {
+        alert('An error occurred while uploading the avatar.');
+        console.error(error);
+      }
+    },
  
   },
   created() {
@@ -226,10 +238,12 @@ export default {
   },
   computed: {
     sortedOrders() {
+      // slice para copiar, assim nao modar os dados originais
       return this.orderStore.getOrders.slice().sort((a, b) => {
       const dateA = new Date(a.createdAt);
       const dateB = new Date(b.createdAt);
       const today = new Date();
+      // calcular diferença entre a data de hoje e a data da ordem e ordenar por ordem crescente
       const diffA = Math.abs(today - dateA);
       const diffB = Math.abs(today - dateB);
       return diffA - diffB;

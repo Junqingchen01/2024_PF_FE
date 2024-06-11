@@ -143,7 +143,7 @@
           <v-card-actions class="justify-center align-center" >
             <v-btn v-if="isReservationAvailable" @click="submit" color="#7D0A0A">Reserva</v-btn>
             <!-- Back to the previous page -->
-            <v-btn @click="$router.push('/')" color="#7D0A0A">Voltar</v-btn>
+            <v-btn @click="$router.go(-1)" color="#7D0A0A">Voltar</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -241,16 +241,16 @@ export default {
     },
     submit() {
       const now = new Date();
-      const [hours, minutes] = this.selectedTime === 'Almoço' 
-        ? this.menuStore.getMenu[0].lunch_start_time.split(':').map(Number)
-        : this.menuStore.getMenu[0].dinner_start_time.split(':').map(Number);
-        
-      const menuStartTime = new Date();
-      menuStartTime.setHours(hours, minutes, 0, 0);
-      const oneHourBefore = new Date(menuStartTime.getTime() - 60 * 60 * 1000);
+      const selectedMenu = this.selectedTime === 'Almoço' ? this.menuStore.getMenu[0].lunch_start_time : this.menuStore.getMenu[0].dinner_start_time;
 
-      if (now > oneHourBefore) {
-        alert(`Não é possível reservar menos de uma hora antes do início do ${this.selectedTime === 'Almoço' ? 'almoço' : 'jantar'}.`);
+      // tempo agora e tempo seleciona
+      const currentTime = now.getHours() * 60 + now.getMinutes();
+      const [hours, minutes] = selectedMenu.split(':').map(Number);
+      const menuStartTime = hours * 60 + minutes;
+
+      //verifica se tempo selecionado é o mesmo que agora
+      if (now.toDateString() === now.toDateString() && currentTime > menuStartTime - 60) {
+        alert(`Não é possível reservar dia anterior ou menos de uma hora antes do início do ${this.selectedTime === 'Almoço' ? 'almoço' : 'jantar'}.`);
         return;
       }
 
@@ -258,10 +258,12 @@ export default {
         number_people: this.numPeople,
         OrderDate: this.selectedDate,
         Horario: this.selectedTime,
+
         contents: this.persons.map(person => ({
           name: person.name,
           indifferent: person.indifferent,
           meals: []
+          // concat mudar dados selecionado  para objeto
             .concat(person.meals[0].preprato ? [{
               food_id: person.meals[0].preprato,
               observation: person.meals[0].ObsPrePrato || 'Sem observação'
@@ -304,6 +306,7 @@ export default {
 
       this.menuStore.afterOrder(formattedOrder, newDate, this.selectedTime);
       this.orderStore.criarOrder(orderData);
+      alert('Reserva feita com sucesso!');
       this.$router.push('/perfil');
     }
   },

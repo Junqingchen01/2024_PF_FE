@@ -46,6 +46,13 @@ export default {
       userStore: useUserStore(),
     };
   },
+  created() {
+    this.reflashed = JSON.parse(sessionStorage.getItem('reflashed')) === false;
+    if (!this.reflashed) {
+      window.location.reload();
+      sessionStorage.setItem('reflashed', false);
+    }  
+  },
   computed: {
     currentPhoto() {
       return this.photos[this.currentIndex];
@@ -91,6 +98,7 @@ export default {
   },
   mounted() {
     setInterval(() => {
+      // troca foto a cada 3 segundos
       this.currentIndex = (this.currentIndex + 1) % this.photos.length;
     }, 3000);
   },

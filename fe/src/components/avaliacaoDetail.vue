@@ -27,7 +27,7 @@
             </ul>
             <br>
             <div class="center-button">
-              <v-btn @click="$router.push('/dashboard')" color="#7D0A0A" class="text-center">Volta</v-btn>
+              <v-btn @click="$router.go(-1)" color="#7D0A0A" class="text-center">Volta</v-btn>
             </div>
           </v-card-text>
         </v-card>

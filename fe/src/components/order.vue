@@ -27,7 +27,12 @@
           <v-btn v-if="isAdmin" @click="ativar()" color="red">Ativar avaliação</v-btn>
         </div>
         <div v-if="order.avaliar !== 'true'" style="display: flex ;justify-content: center; margin-top: 10px;">
-            Admin ainda não permite fazer avaliação.
+            <div v-if="isAdmin">
+              Ativar permisao de avaliação para cliente podem avaliar
+            </div>
+            <div v-else>
+              Admin ainda nao permite te avaliar neste pedido
+            </div>
         </div>
       </v-card-text>
     </v-card>
