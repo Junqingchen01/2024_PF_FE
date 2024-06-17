@@ -61,6 +61,29 @@ export const useUserStore = defineStore('user', {
           console.error('Error updating profile:', error);
           return false;
       }
+  },
+
+  async getUserById(id){
+    try {
+      const token = sessionStorage.getItem('token');
+      const res = await fetch(`http://localhost:8080/user/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status === 200) {
+        const user = await res.json();
+        this.user = user;
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.error('Error getting user:', error);
+      return false;
+    }
   }
   
   },

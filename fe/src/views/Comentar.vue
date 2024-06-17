@@ -82,6 +82,8 @@
 </template>
 
 <script>
+import { useOrderStore } from '../stores/order';
+
 export default {
   data() {
     return {
@@ -92,8 +94,17 @@ export default {
       serviceObservation: '',
       temperatureObservation: '',
       lightObservation: '',
-      order: JSON.parse(sessionStorage.getItem('order')) 
+      order: JSON.parse(sessionStorage.getItem('order')) ,
+      orderStore: useOrderStore(),
+
     };
+  },
+  created() {
+    // if(this.order.isAvaliado === 'true') {
+    //   this.$router.go(-1);
+    //   alert('Erro ! ja fizest avaliação sobre neste order !');
+      
+    // }
   },
   methods: {
     async submitComment() {
@@ -119,7 +130,9 @@ export default {
           body: JSON.stringify(comentario)
         });
         if (res.status === 201) {
+          await this.orderStore.SetisAvaliado(this.order.order_id);
           alert('avaliação entrega com sucesso !');
+
           this.$router.push('/perfil');
         } else {
           alert('Erro ! ja fizest avaliação sobre neste order !');

@@ -242,18 +242,32 @@ export default {
     submit() {
       const now = new Date();
       const selectedMenu = this.selectedTime === 'Almoço' ? this.menuStore.getMenu[0].lunch_start_time : this.menuStore.getMenu[0].dinner_start_time;
+      const dayMap = {
+        'Domingo': 0,
+        'Segunda-feira': 1,
+        'Terça-feira': 2,
+        'Quarta-feira': 3,
+        'Quinta-feira': 4,
+        'Sexta-feira': 5,
+        'Sábado': 6
+      };
+      
+      const today = now.getDay();
+      const selectedDay = dayMap[this.selectedDate];
 
       // tempo agora e tempo seleciona
       const currentTime = now.getHours() * 60 + now.getMinutes();
       const [hours, minutes] = selectedMenu.split(':').map(Number);
       const menuStartTime = hours * 60 + minutes;
 
-      //verifica se tempo selecionado é o mesmo que agora
-      if (now.toDateString() === now.toDateString() && currentTime > menuStartTime - 60) {
-        alert(`Não é possível reservar dia anterior ou menos de uma hora antes do início do ${this.selectedTime === 'Almoço' ? 'almoço' : 'jantar'}.`);
-        return;
-      }
+      // Verificar se a reserva é para o mesmo dia e menos de uma hora antes da hora de início da refeição
+      if (today === selectedDay || today > selectedDay && currentTime > menuStartTime - 60) {
+      alert(`Não é possível reservar no mesmo dia e menos de uma hora antes do início do ${this.selectedTime === 'Almoço' ? 'almoço' : 'jantar'}.`);
+      return;
+    }
 
+    // Verificar se a reserva é para um dia futuro ou se hoje é fim de semana
+     if (today < selectedDay || (today === 6 || today === 0) || (today === selectedDay && currentTime < menuStartTime - 60)) {
       const orderData = {
         number_people: this.numPeople,
         OrderDate: this.selectedDate,
@@ -308,6 +322,7 @@ export default {
       this.orderStore.criarOrder(orderData);
       alert('Reserva feita com sucesso!');
       this.$router.push('/perfil');
+    }
     }
   },
   computed: {

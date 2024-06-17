@@ -91,7 +91,9 @@
                         <p><strong style="color: #7D0A0A;">Order Date:</strong> {{ order.OrderDate }}</p>
                         <p><strong style="color: #7D0A0A;">Horario:</strong> {{ order.Horario }}</p>
                       </div>
-                      <p class="order-status" :class="{ 'Done': order.Status === 'done' }">{{ order.Status === 'in_progress' ? 'Em progresso' : order.Status }}</p>
+                      <p class="order-status" :class="{ 'Done': order.Status === 'done' }">{{ order.Status === 'in_progress' ? 'Em progresso' : 'Done' }}</p>
+                      <p class="order-status" :class="{ 'Done': order.Status === 'done' }" v-if="order.isAvaliado==='true'">Avaliado</p>
+                      <p class="order-status" v-if="order.isAvaliado !=='true'">Falta Avaliar</p>
                     </div>
                   </v-card>
                 </v-col>

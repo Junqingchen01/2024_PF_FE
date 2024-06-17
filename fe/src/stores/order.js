@@ -156,7 +156,32 @@ export const useOrderStore = defineStore('order', {
         console.error('Error updating order:', error);
         return false;
       }
-    }
+    },
+
+    async SetisAvaliado(id) {
+      try {
+        const token = sessionStorage.getItem('token');
+        const res = await fetch(`http://localhost:8080/order/orderid/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            isAvaliado: 'true',
+          }),
+        });
+    
+        if (res.status === 200) {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        console.error('Error updating order:', error);
+        return false;
+      }
+    },
     
   },
 });

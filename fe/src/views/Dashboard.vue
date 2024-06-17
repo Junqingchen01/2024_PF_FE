@@ -147,6 +147,7 @@
                   <th class="text-center">Número de Pessoas</th>
                   <th class="text-center">Data do Pedido</th>
                   <th class="text-center">Horario</th>
+                  <th class="text-center">Avaliação Ativada</th>
                   <th class="text-center">Ação</th>
                 </tr>
               </thead>
@@ -156,6 +157,8 @@
                   <td>{{ order.number_people }}</td>
                   <td>{{ order.OrderDate }}</td>
                   <td>{{ order.Horario }}</td>
+                  <td v-if="order.avaliar === 'true'">Ativado</td>
+                  <td v-else>Inativado</td>
                   <td>
                     <v-btn color="#7D0A0A" @click="goToOrderDetail(order.order_id)">Detalhes</v-btn>
                   </td>

@@ -8,6 +8,7 @@
         <div>{{ order.number_people }} Pessoas</div>
         <div>{{ order.OrderDate }} - {{order.Horario}}</div>
         <div>Status: {{ order.status }}</div>
+        <div v-if="order.isAvaliado === 'true'"> Neste order ja esta avaliado</div>
       </v-card-title>
       <v-card-text>
         <div v-for="(client, clientIndex) in order.clients" :key="clientIndex" class="client-section">
@@ -22,11 +23,11 @@
 
         </div>
         <div class="buttons">
-          <v-btn v-if="order.status === 'done' " @click="cancelOrder()" color="#7D0A0A">Cancelar</v-btn>
-          <v-btn v-if="order.avaliar === 'true' " @click="Comentar(order.order_id)" color="#7D0A0A">Avaliar</v-btn>
-          <v-btn v-if="isAdmin" @click="ativar()" color="red">Ativar avaliação</v-btn>
+          <v-btn v-if="order.status === 'done' && !isAdmin" @click="cancelOrder()" color="#7D0A0A">Cancelar</v-btn>
+          <v-btn v-if="order.avaliar === 'true' && !isAdmin && order.isAvaliado !='true'" @click="Comentar(order.order_id)" color="#7D0A0A">Avaliar</v-btn>
+          <v-btn v-if="isAdmin && order.avaliar != 'true'" @click="ativar()" color="red">Ativar avaliação</v-btn>
         </div>
-        <div v-if="order.avaliar !== 'true'" style="display: flex ;justify-content: center; margin-top: 10px;">
+        <div v-if="order.avaliar != 'true'" style="display: flex ;justify-content: center; margin-top: 10px;">
             <div v-if="isAdmin">
               Ativar permisao de avaliação para cliente podem avaliar
             </div>
@@ -72,7 +73,7 @@ export default defineComponent({
       if (res === null) return;
       if (res.toLowerCase() === 'sim') {
         await this.orderStore.cancelOrder(this.order.order_id);
-        this.$router.push('/orders');
+        this.$router.go(-1);
       }
     },
     Comentar(id){
