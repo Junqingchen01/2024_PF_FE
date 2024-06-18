@@ -242,6 +242,7 @@ export default {
     submit() {
       const now = new Date();
       const selectedMenu = this.selectedTime === 'Almoço' ? this.menuStore.getMenu[0].lunch_start_time : this.menuStore.getMenu[0].dinner_start_time;
+
       const dayMap = {
         'Domingo': 0,
         'Segunda-feira': 1,
@@ -257,17 +258,18 @@ export default {
 
       // tempo agora e tempo seleciona
       const currentTime = now.getHours() * 60 + now.getMinutes();
+      // tempo de menu selecionado
       const [hours, minutes] = selectedMenu.split(':').map(Number);
       const menuStartTime = hours * 60 + minutes;
 
       // Verificar se a reserva é para o mesmo dia e menos de uma hora antes da hora de início da refeição
-      if (today === selectedDay || today > selectedDay && currentTime > menuStartTime - 60) {
-      alert(`Não é possível reservar no mesmo dia e menos de uma hora antes do início do ${this.selectedTime === 'Almoço' ? 'almoço' : 'jantar'}.`);
+      if (today === selectedDay && currentTime > menuStartTime - 60) {
+        alert(`Não é possível reservar no mesmo dia e menos de uma hora antes do início do ${this.selectedTime === 'Almoço' ? 'almoço' : 'jantar'}.`);
       return;
     }
 
     // Verificar se a reserva é para um dia futuro ou se hoje é fim de semana
-     if (today < selectedDay || (today === 6 || today === 0) || (today === selectedDay && currentTime < menuStartTime - 60)) {
+     if (today <= selectedDay) {
       const orderData = {
         number_people: this.numPeople,
         OrderDate: this.selectedDate,

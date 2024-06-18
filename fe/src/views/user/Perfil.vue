@@ -84,12 +84,13 @@
                   <div v-if="sortedOrders.length === 0">
                     <p>Não há ordens ainda.</p>
                   </div>
-                  <v-card v-for="(order, index) in sortedOrders" :key="index" class="order-card" @click="goToOrderDetail(order.order_id)">
+                  <v-card v-for="(order, index) in sortedOrdersWithFormattedDate" :key="index" class="order-card" @click="goToOrderDetail(order.order_id)">
                     <div class="orden-content order-content">
                       <div class="order-info">
                         <p><strong style="color: #7D0A0A;">Order ID:</strong> {{ order.order_id }}</p>
                         <p><strong style="color: #7D0A0A;">Order Date:</strong> {{ order.OrderDate }}</p>
                         <p><strong style="color: #7D0A0A;">Horario:</strong> {{ order.Horario }}</p>
+                        <p><strong style="color: #7D0A0A;">Dia</strong> {{ order.formattedOrderDate }}</p>
                       </div>
                       <p class="order-status" :class="{ 'Done': order.Status === 'done' }">{{ order.Status === 'in_progress' ? 'Em progresso' : 'Done' }}</p>
                       <p class="order-status" :class="{ 'Done': order.Status === 'done' }" v-if="order.isAvaliado==='true'">Avaliado</p>
@@ -104,7 +105,7 @@
         <v-card class="mt-5" style="height: 395px;">
           <v-card-title class="text-center title">Minha Avaliação</v-card-title>
           <v-divider></v-divider>
-          <v-card-text style="height: calc(100% - 56px); overflow-y: auto; display: flex; justify-content: center; align-items: center;">
+          <v-card-text style="height: calc(100% - 33px); overflow-y: auto; display: flex; justify-content: center; align-items: center;">
             <v-list v-if="avaliacoes.length === 0">
               <div>Ainda não fizeste nenhuma avaliação.</div>
             </v-list>
@@ -181,6 +182,28 @@ export default {
     };
   },
   methods: {
+    calculateFormattedOrderDate(createdAtStr, orderDateStr) {
+      const createdAt = new Date(createdAtStr);
+      const orderDateDay = this.getDayFromOrderDate(orderDateStr);
+      const currentDay = createdAt.getDay();
+      
+      const daysDifference = (orderDateDay - currentDay + 7) % 7;
+      const calculatedOrderDate = new Date(createdAt);
+      calculatedOrderDate.setDate(createdAt.getDate() + daysDifference);
+      return calculatedOrderDate.toLocaleDateString();
+    },
+  getDayFromOrderDate(orderDateStr) {
+    const dayMap = {
+      'Domingo': 0,
+      'Segunda-feira': 1,
+      'Terça-feira': 2,
+      'Quarta-feira': 3,
+      'Quinta-feira': 4,
+      'Sexta-feira': 5,
+      'Sábado': 6
+    };
+    return dayMap[orderDateStr];
+  },
     logout() {
       sessionStorage.clear();
       this.$router.push('/login');
@@ -199,6 +222,7 @@ export default {
     },
     goToAvaliacaoDetail(index) {
       this.$router.push({ name: 'avaliacaoDetail', params: { id: this.avaliacoes[index].avaliacao_id }});
+      console.log(this.this.avaliacoes[index].avaliacao_id)
     },
     async uploadAvatar() {
       try {
@@ -250,7 +274,15 @@ export default {
       const diffB = Math.abs(today - dateB);
       return diffA - diffB;
       });
-    }
+    },
+    sortedOrdersWithFormattedDate() {
+    return this.sortedOrders.map(order => {
+      return {
+        ...order,
+        formattedOrderDate: this.calculateFormattedOrderDate(order.createdAt, order.OrderDate)
+      };
+    });
+  },
   }
 };
 </script>

@@ -98,7 +98,6 @@ export default {
   },
   mounted() {
     setInterval(() => {
-      // troca foto a cada 3 segundos
       this.currentIndex = (this.currentIndex + 1) % this.photos.length;
     }, 3000);
   },

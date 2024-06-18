@@ -119,7 +119,7 @@ import { useUserStore } from '@/stores/user';
 export default {
   data() {
     return {
-      photos: [chefImage, escolaImage, premioImage],
+      photos: [escolaImage, premioImage, chefImage],
       currentIndex: 0,
       todayMenu: [],
       today: new Date().toLocaleDateString('pt-PT', { weekday: 'long' }).toLowerCase(),
@@ -166,7 +166,9 @@ export default {
     
   },
   mounted() {
-    
+    setInterval(() => {
+      this.currentIndex = (this.currentIndex + 1) % this.photos.length;
+    }, 3000);
   },
 };
 </script>

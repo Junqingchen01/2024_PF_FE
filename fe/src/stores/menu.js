@@ -167,7 +167,6 @@ export const useMenuStore = defineStore('menu', {
         async fetchTodayMenu() {
             try {
                 const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-                console.log(today);
                 const res = await fetch(`http://localhost:8080/menu/${today}`, {
                     method: 'GET',
                     headers: {
@@ -176,7 +175,6 @@ export const useMenuStore = defineStore('menu', {
                 if (res.status === 200) {
                     const data = await res.json();
                     this.todaymenu = data.data;
-                    console.log(this.todaymenu);
                     sessionStorage.setItem('todaymenu', JSON.stringify(data.data));
                     return true;
                 } else {

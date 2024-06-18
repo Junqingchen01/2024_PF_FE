@@ -66,7 +66,7 @@
   });
   </script>
   
-  <style scoped>
+<style scoped>
   .avaliacao-card {
     background-color: white;
     margin-top: 30px;
