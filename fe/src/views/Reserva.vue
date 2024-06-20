@@ -269,7 +269,7 @@ export default {
     }
 
     // Verificar se a reserva é para um dia futuro ou se hoje é fim de semana
-     if (today <= selectedDay) {
+     if (today === selectedDay && currentTime < menuStartTime - 60 || today < selectedDay  || today === 6 || today == 0) {
       const orderData = {
         number_people: this.numPeople,
         OrderDate: this.selectedDate,
@@ -319,11 +319,13 @@ export default {
         'Quinta-feira': 'Thursday',
         'Sexta-feira': 'Friday'
       }[this.selectedDate];
-
       this.menuStore.afterOrder(formattedOrder, newDate, this.selectedTime);
       this.orderStore.criarOrder(orderData);
+      console.log(orderData);
       alert('Reserva feita com sucesso!');
       this.$router.push('/perfil');
+    }else{
+      alert('Erro! Não possivel de reserva para dia anterior !')
     }
     }
   },

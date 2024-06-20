@@ -1,40 +1,41 @@
 <template>
-    <v-row justify="center">
-      <v-col cols="5">
-        <v-card v-if="avaliacao" class="avaliacao-card">
-          <v-card-title class="text-center">
-            <div>
-              <h2>Avaliação Detalhes</h2>
-            </div>
-            <div>ID da Avaliação: {{ avaliacao.avaliacao_id }}</div>
-            <div>ID do Pedido: {{ avaliacao.order_id }}</div>
-            <div>Data de Criação: {{ new Date(avaliacao.createdAt).toLocaleDateString() }}</div>
-          </v-card-title>
-          <v-card-text class="text-center">
-            <p>Classificações:</p>
-            <ul class="avaliacao-ratings">
-              <li>Classificação do Serviço: {{ avaliacao.servicerating }}</li>
-              <li>Classificação da Temperatura: {{ avaliacao.temperatureRating }}</li>
-              <li>Classificação da Luz: {{ avaliacao.lightRating }}</li>
-            </ul>
-            <p>Observação: {{ avaliacao.Observation }}</p>
-            <p>Classificação de Comidas:</p>
-            <ul class="avaliacao-foods">
-              <li v-for="(food, index) in avaliacao.avaliacaoFoods" :key="index">
-                Comida ID: {{ food.food_id }} 
-                <br>- Classificação de Quantidade: {{ food.quantityRating }}
-              </li>
-            </ul>
-            <br>
-            <div class="center-button">
-              <v-btn @click="$router.go(-1)" color="#7D0A0A" class="text-center">Volta</v-btn>
-            </div>
-          </v-card-text>
-        </v-card>
-        <v-alert v-else type="error">Dados de avaliação não disponíveis.</v-alert>
-      </v-col>
-    </v-row>
-  </template>
+  <v-row justify="center">
+    <v-col cols="5">
+      <v-card v-if="avaliacao" class="avaliacao-card">
+        <v-card-title class="text-center">
+          <div>
+            <h2>Avaliação Detalhes</h2>
+          </div>
+          <div>ID da Avaliação: {{ avaliacao.avaliacao_id }}</div>
+          <div>ID do Pedido: {{ avaliacao.order_id }}</div>
+          <div>Data de Criação: {{ new Date(avaliacao.createdAt).toLocaleDateString() }}</div>
+        </v-card-title>
+        <v-card-text class="text-center">
+          <p>Classificações:</p>
+          <ul class="avaliacao-ratings">
+            <li>Classificação do Serviço: {{ avaliacao.servicerating }} / 5</li>
+            <li>Classificação da Temperatura: {{ avaliacao.temperatureRating }} / 5</li>
+            <li>Classificação da Luz: {{ avaliacao.lightRating }} / 5</li>
+          </ul>
+          <p>Observação: {{ avaliacao.Observation }}</p>
+          <p>Classificação de Comidas:</p>
+          <ul class="avaliacao-foods">
+            <li v-for="(food, index) in avaliacao.avaliacaoFoods" :key="index">
+              Comida  : {{ food.food.food_name }} 
+              <br>- Classificação de Quantidade: {{ food.quantityRating }} / 5
+            </li>
+          </ul>
+          <br>
+          <div class="center-button">
+            <v-btn @click="$router.go(-1)" color="#7D0A0A" class="text-center">Voltar</v-btn>
+          </div>
+        </v-card-text>
+      </v-card>
+      <v-alert v-else type="error">Dados de avaliação não disponíveis.</v-alert>
+    </v-col>
+  </v-row>
+</template>
+
   
   <script>
   import { defineComponent } from 'vue';

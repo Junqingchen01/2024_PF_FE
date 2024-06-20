@@ -72,12 +72,12 @@
       <template v-for="(avaliacao, index) in avaliacoes" :key="index">
         <v-col cols="10" md="4">
           <v-card class="reviews-card" style="max-width: 500px;">
-            <v-card-title>Review {{ index + 1 }}</v-card-title>
+            <v-card-title>Avaliação {{ index + 1 }}</v-card-title>
             <v-card-text>
               <v-list>
                 <v-list-item>
                   <v-list-item-content>
-                    <v-list-item-title>User: {{avaliacao.UserID }}</v-list-item-title>
+                    <v-list-item-title>UserID: {{avaliacao.UserID }}</v-list-item-title>
                     <v-list-item-title>Classificação Serviço: {{ avaliacao.servicerating  }} / 5</v-list-item-title>
                     <v-rating color="#FFD700" v-model="avaliacao.servicerating" readonly></v-rating>
 

@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia';
 
+
 export const useAvaliarStore = defineStore('avaliar',{
     state: () => ({
         avaliacoes: [],

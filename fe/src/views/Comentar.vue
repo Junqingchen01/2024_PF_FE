@@ -66,7 +66,7 @@
           <v-card-text>
             <v-divider></v-divider>
             <br>
-            <h2>FeelBack ou Comentario</h2>
+            <h2>FeedBack ou Comentario</h2>
             <v-col>
               <v-text-field v-model="Observation" label="Comment about the restaurant environment"></v-text-field>
             </v-col>
