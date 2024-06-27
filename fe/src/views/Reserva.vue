@@ -185,6 +185,7 @@ export default {
         return;
       }
       const success = await this.fetchMenu();
+
       if (success) {
         this.reservationSubmitted = true;
         this.activePersonIndex = 0;
@@ -264,7 +265,8 @@ export default {
 
       // Verificar se a reserva é para o mesmo dia e menos de uma hora antes da hora de início da refeição
       if (today === selectedDay && currentTime > menuStartTime - 60) {
-        alert(`Não é possível reservar no mesmo dia e menos de uma hora antes do início do ${this.selectedTime === 'Almoço' ? 'almoço' : 'jantar'}.`);
+        alert(`Não é possível reservar no mesmo dia e menos de uma hora antes do início do 
+        ${this.selectedTime === 'Almoço' ? 'almoço' : 'jantar'}.`);
       return;
     }
 

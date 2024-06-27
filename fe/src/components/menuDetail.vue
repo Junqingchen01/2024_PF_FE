@@ -85,7 +85,8 @@
           <br>
           <v-row v-for="(menuItem, index) in menuItems" :key="index">
             <v-col cols="3">
-              <v-select v-model="menuItem.type" :items="foodType" label="Tipo de Comida"></v-select>
+              <v-select v-model="menuItem.type" :items="foodType" label="Tipo de Comida"@change="clearFoodName(menuItem)"
+              ></v-select>
             </v-col>
             <v-col cols="3">
               <v-select v-if="menuItem.type === 'pre prato'" v-model="menuItem.food_name" :items="PrepratoFoods" label="Comida"></v-select>
@@ -175,6 +176,9 @@ export default defineComponent({
     },
     removeMenuItem(index) {
       this.menuItems.splice(index, 1);
+    },
+    clearFoodName(menuItem) {
+      menuItem.food_name = '';
     },
     async saveEditedMenu() {
       try {

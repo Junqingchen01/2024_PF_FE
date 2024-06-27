@@ -56,7 +56,8 @@ const router = createRouter({
         if (isAuthenticated) {
           next();
         } else {
-          next('/login');
+          alert('So administradores podem entrar neste pagina !');
+          next('/home');
         }
       }
     },
